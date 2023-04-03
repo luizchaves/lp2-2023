@@ -1,0 +1,35 @@
+@startuml
+title Hello HTTP
+hide footbox
+skinparam monochrome true
+
+Client -> Server: HTTP Request (req)
+note right: GET / HTTP/1.1\nHost: 127.0.0.1:3000
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 200 OK\n\nHello World!
+
+Client -> Server: HTTP Request (req)
+note right: GET /ola HTTP/1.1\nHost: 127.0.0.1:3000
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 200 OK\n\nOlá, mundo!
+
+Client -> Server: HTTP Request (req)
+note right: GET /hello/en?name=John HTTP/1.1\nHost: 127.0.0.1:3000
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 200 OK\n\n{\n  "name": "Hello, John!"\n}
+
+Client -> Server: HTTP Request (req)
+note right: GET /hello/pt/John HTTP/1.1\nHost: 127.0.0.1:3000
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 200 OK\n\n{\n  "name": "Olá, John!"\n}
+
+Client -> Server: HTTP Request (req)
+note right: POST /hello/es HTTP/1.1\nHost: 127.0.0.1:3000\nContent-Type: application/json\n\n{\n  "name": "John"\n}
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 200 OK\n\n{\n  "name": "¡Hola, John!"\n}
+
+Client -> Server: HTTP Request (req)
+note right: GET /hello/fr HTTP/1.1\nHost: 127.0.0.1:3000
+Server -> Client: HTTP Response (res)
+note left: HTTP/1.1 404 Not Found\n\nContent not found!
+@enduml

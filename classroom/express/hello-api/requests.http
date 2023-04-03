@@ -1,8 +1,42 @@
-### POST /hello/es
+@server = http://localhost:3000
 
-POST http://localhost:3000/hello/es
+### get /
+
+GET {{server}}/
+
+### get /ola
+
+GET {{server}}/ola
+
+### get /hello/en
+
+GET {{server}}/hello/en?name=John
+
+### get /hello/en with bad request
+
+GET {{server}}/hello/en
+
+### get /hello/pt/:name 
+
+GET {{server}}/hello/pt/John
+
+### get /hello/pt/:name with bad request
+
+GET {{server}}/hello/pt/
+
+### post /hello/es
+
+POST {{server}}/hello/es
 Content-Type: application/json
 
 {
-  "name": "Luiz"
+  "name": "John"
 }
+
+### post /hello/es with bad request
+
+POST {{server}}/hello/es
+
+### get /hello/fr (404)
+
+GET {{server}}/hello/fr
