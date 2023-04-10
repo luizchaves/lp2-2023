@@ -1,0 +1,19 @@
+@host = http://localhost:3000
+
+### Get Investiments
+
+GET {{host}}/investiments
+
+### Create Investiment
+
+POST {{host}}/investiments
+Content-Type: application/json
+
+{
+  "name": "Tesouro IPCA 2029",
+  "value": 100
+}
+
+### Delete Investiment
+
+DELETE {{host}}/investiments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
