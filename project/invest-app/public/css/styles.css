@@ -1,0 +1,19 @@
+.card .iconify:hover {
+  cursor: pointer;
+}
+
+.investment-pos {
+  background-color: #6366f1;
+}
+
+.investment-pre {
+  background-color: #d946ef;
+}
+
+.investment-ipca {
+  background-color: #f43f5e;
+}
+
+.investment-rv {
+  background-color: #eab308;
+}
