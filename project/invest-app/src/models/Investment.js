@@ -1,34 +1,100 @@
-import { v4 as uuidv4 } from 'uuid';
-import { investments } from '../data/investments.js';
+import Database from '../database/database.js';
 
-function read() {
+async function create(investment) {
+  const db = await Database.connect();
+
+  const { name, value, category_id } = investment;
+
+  const sql = `
+    INSERT INTO
+      investments (name, value, category_id)
+    VALUES
+      (?, ?, ?)
+  `;
+
+  const { lastID } = await db.run(sql, [name, value, category_id]);
+
+  return read(lastID);
+}
+
+async function readAll() {
+  const db = await Database.connect();
+
+  const sql = `
+    SELECT
+      f.id, f.name, f.value, c.name as category
+    FROM
+      investments as f INNER JOIN categories as c
+    ON
+      f.category_id = c.id
+  `;
+
+  const investments = await db.all(sql);
+
   return investments;
 }
 
-function create(investment) {
-  const id = uuidv4();
+async function read(id) {
+  const db = await Database.connect();
 
-  if (investment) {
-    investments.push({ ...investment, id });
+  const sql = `
+    SELECT
+      f.id, f.name, f.value, c.name as category
+    FROM
+      investments as f INNER JOIN categories as c
+    ON
+      f.category_id = c.id
+    WHERE
+      f.id = ?
+  `;
 
-    return investment;
+  const investments = await db.get(sql, [id]);
+
+  return investments;
+}
+
+async function update(investment, id) {
+  const db = await Database.connect();
+
+  const { name, value, category_id } = investment;
+
+  const sql = `
+    UPDATE
+      investments
+    SET
+      name = ?, value = ?, category_id = ?
+    WHERE
+      id = ?
+  `;
+
+  const { changes } = await db.run(sql, [name, value, category_id, id]);
+
+  if (changes === 1) {
+    return read(id);
   } else {
-    throw new Error('Error to create investment');
+    return false;
   }
 }
 
-function remove(id) {
-  if (id) {
-    const index = investments.findIndex((investment) => investment.id === id);
+async function remove(id) {
+  const db = await Database.connect();
 
-    investments.splice(index, 1);
-  } else {
-    throw new Error('Error to remove investment');
-  }
+  const sql = `
+    DELETE FROM
+      investments
+    WHERE
+      id = ?
+  `;
+
+  const { changes } = await db.run(sql, [id]);
+
+  return changes === 1;
 }
 
 export default {
   create,
+  readAll,
   read,
+  update,
   remove,
 };

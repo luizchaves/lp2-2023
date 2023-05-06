@@ -20,7 +20,10 @@ function getInvestmentView(investment) {
         </div>
       </div>
       <div class="card-body">
-        <span class="fw-bold">Valor:</span> ${formatCurrency(investment.value)}
+        <span class="fw-bold">Valor:</span> ${formatCurrency(
+          investment.value
+        )}<br />
+        <span class="fw-bold">Categoria:</span> ${investment.category}
       </div>
     </div>
   </div>`;
@@ -64,7 +67,9 @@ function loadFormSubmit() {
 
     const value = Number(document.querySelector('#value').value);
 
-    const investment = { name, value };
+    const category_id = Number(document.querySelector('#category_id').value);
+
+    const investment = { name, value, category_id };
 
     const response = await fetch('/investments', {
       method: 'post',
@@ -83,6 +88,23 @@ function loadFormSubmit() {
     document.querySelector('#offcanvas-close').click();
   };
 }
+
+async function loadCategoriesSelect() {
+  const select = document.querySelector('#category_id');
+
+  const response = await fetch('/categories');
+
+  const categories = await response.json();
+
+  for (const category of categories) {
+    select.insertAdjacentHTML(
+      'beforeend',
+      `<option value="${category.id}">${category.name}</option>`
+    );
+  }
+}
+
+loadCategoriesSelect();
 
 loadInvestments();
 

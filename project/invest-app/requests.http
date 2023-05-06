@@ -1,19 +1,37 @@
-@host = http://localhost:3000
+@baseUrl  = http://localhost:3000
+@createdInvestmentId = {{createInvestment.response.body.$.id}}
 
-### Get Investments
+### Create a new Investment
 
-GET {{host}}/investments
-
-### Create Investment
-
-POST {{host}}/investments
+# @name createInvestment
+POST {{baseUrl}}/investments
 Content-Type: application/json
 
 {
   "name": "Tesouro IPCA 2029",
-  "value": 100
+  "value": 100,
+  "category_id": 3
 }
 
-### Delete Investment
+### Read all Investments
 
-DELETE {{host}}/investments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
+GET {{baseUrl}}/investments
+
+### Read a Investment
+
+GET {{baseUrl}}/investments/{{createdInvestmentId}}
+
+### Update a Investment
+
+PUT {{baseUrl}}/investments/{{createdInvestmentId}}
+Content-Type: application/json
+
+{
+  "name": "Tesouro IPCA 2029",
+  "value": 200,
+  "category_id": 3
+}
+
+### Delete a Investment
+
+DELETE {{baseUrl}}/investments/{{createdInvestmentId}}

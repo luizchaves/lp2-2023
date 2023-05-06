@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Investment from './models/Investment.js';
+import Category from './models/Category.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -10,34 +11,52 @@ class HTTPError extends Error {
 
 const router = Router();
 
-router.get('/investments', (req, res) => {
-  const investments = Investment.read();
+router.post('/investments', async (req, res) => {
+  const investment = req.body;
+
+  const newInvestment = await Investment.create(investment);
+
+  if (newInvestment) {
+    res.json(newInvestment);
+  } else {
+    throw new HTTPError('Invalid data to create investment', 400);
+  }
+});
+
+router.get('/investments', async (req, res) => {
+  const investments = await Investment.readAll();
 
   res.json(investments);
 });
 
-router.post('/investments', (req, res) => {
+router.put('/investments/:id', async (req, res) => {
+  const id = Number(req.params.id);
+
   const investment = req.body;
 
-  if (investment) {
-    const newInvestment = Investment.create(investment);
+  if (id && investment) {
+    const newInvestment = await Investment.update(investment, id);
 
     res.json(newInvestment);
   } else {
-    throw new HTTPError('Invalid data to create invest', 400);
+    throw new HTTPError('Invalid data to update investment', 400);
   }
 });
 
-router.delete('/investments/:id', (req, res) => {
+router.delete('/investments/:id', async (req, res) => {
   const id = req.params.id;
 
-  if (id) {
-    Investment.remove(id);
-
+  if (id && (await Investment.remove(id))) {
     res.sendStatus(204);
   } else {
     throw new HTTPError('Id is required to remove investment', 400);
   }
+});
+
+router.get('/categories', async (req, res) => {
+  const categories = await Category.readAll();
+
+  res.json(categories);
 });
 
 // 404 handler
