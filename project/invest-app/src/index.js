@@ -1,7 +1,7 @@
 import express from 'express';
 import morgan from 'morgan';
 import { v4 as uuidv4 } from 'uuid';
-import { investiments } from './data/investiments.js';
+import { investments } from './data/investments.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -18,33 +18,31 @@ server.use(express.json());
 
 server.use(express.static('public'));
 
-server.get('/investiments', (req, res) => {
-  res.json(investiments);
+server.get('/investments', (req, res) => {
+  res.json(investments);
 });
 
-server.post('/investiments', (req, res) => {
-  const investiment = req.body;
+server.post('/investments', (req, res) => {
+  const investment = req.body;
 
   const id = uuidv4();
 
-  if (investiment) {
-    investiments.push({ ...investiment, id });
+  if (investment) {
+    investments.push({ ...investment, id });
 
-    res.json(investiment);
+    res.json(investment);
   } else {
     throw new HTTPError('Dados inválidos para cadastro de investimento', 400);
   }
 });
 
-server.delete('/investiments/:id', (req, res) => {
+server.delete('/investments/:id', (req, res) => {
   const id = req.params.id;
 
   if (id) {
-    const index = investiments.findIndex(
-      (investiment) => investiment.id === id
-    );
+    const index = investments.findIndex((investment) => investment.id === id);
 
-    investiments.splice(index, 1);
+    investments.splice(index, 1);
   }
 
   res.send(204);

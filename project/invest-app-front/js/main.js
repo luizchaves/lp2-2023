@@ -1,20 +1,20 @@
-const response = await fetch('./data/investiments.json');
+const response = await fetch('./data/investments.json');
 const data = await response.json();
 
-let investimentView = '';
+let investmentView = '';
 
-for (const investiment of data.investiments) {
-  investimentView += getInvestimentView(investiment);
+for (const investment of data.investments) {
+  investmentView += getInvestmentView(investment);
 }
 
-document.querySelector('#investiment-grid').innerHTML = investimentView;
+document.querySelector('#investment-grid').innerHTML = investmentView;
 
-function getInvestimentView(investiment) {
+function getInvestmentView(investment) {
   return `<div class="col">
     <div class="card">
-      <div class="card-header">${investiment.name}</div>
+      <div class="card-header">${investment.name}</div>
       <div class="card-body">
-        <span>${investiment.value}</span>
+        <span>${investment.value}</span>
       </div>
     </div>
   </div>`;

@@ -5,11 +5,11 @@ function formatCurrency(value) {
   });
 }
 
-function getInvestimentView(investiment) {
-  return `<div class="col" id="investiment-${investiment.id}">
+function getInvestmentView(investment) {
+  return `<div class="col" id="investment-${investment.id}">
     <div class="card">
       <div class="card-header">
-        ${investiment.name}
+        ${investment.name}
         <div class="icon-trash" style="float: right; display: inline">
           <span
             class="iconify"
@@ -20,39 +20,37 @@ function getInvestimentView(investiment) {
         </div>
       </div>
       <div class="card-body">
-        <span class="fw-bold">Valor:</span> ${formatCurrency(investiment.value)}
+        <span class="fw-bold">Valor:</span> ${formatCurrency(investment.value)}
       </div>
     </div>
   </div>`;
 }
 
-function addInvestimentView(investiment) {
-  const investimentsGrid = document.querySelector('#investiment-grid');
+function addInvestmentView(investment) {
+  const investmentsGrid = document.querySelector('#investment-grid');
 
-  const investimentView = getInvestimentView(investiment);
+  const investmentView = getInvestmentView(investment);
 
-  investimentsGrid.insertAdjacentHTML('beforeend', investimentView);
+  investmentsGrid.insertAdjacentHTML('beforeend', investmentView);
 
-  const investimentCard = document.querySelector(
-    `#investiment-${investiment.id}`
-  );
+  const investmentCard = document.querySelector(`#investment-${investment.id}`);
 
-  investimentCard.querySelector('.icon-trash').onclick = () => {
-    fetch(`/investiments/${investiment.id}`, {
+  investmentCard.querySelector('.icon-trash').onclick = () => {
+    fetch(`/investments/${investment.id}`, {
       method: 'delete',
     });
 
-    investimentCard.remove();
+    investmentCard.remove();
   };
 }
 
-async function loadInvestiments() {
-  const response = await fetch('/investiments');
+async function loadInvestments() {
+  const response = await fetch('/investments');
 
-  const investiments = await response.json();
+  const investments = await response.json();
 
-  for (const investiment of investiments) {
-    addInvestimentView(investiment);
+  for (const investment of investments) {
+    addInvestmentView(investment);
   }
 }
 
@@ -66,19 +64,19 @@ function loadFormSubmit() {
 
     const value = Number(document.querySelector('#value').value);
 
-    const investiment = { name, value };
+    const investment = { name, value };
 
-    const response = await fetch('/investiments', {
+    const response = await fetch('/investments', {
       method: 'post',
-      body: JSON.stringify(investiment),
+      body: JSON.stringify(investment),
       headers: {
         'Content-Type': 'application/json',
       },
     });
 
-    const newInvestiment = await response.json();
+    const newInvestment = await response.json();
 
-    addInvestimentView(newInvestiment);
+    addInvestmentView(newInvestment);
 
     form.reset();
 
@@ -86,6 +84,6 @@ function loadFormSubmit() {
   };
 }
 
-loadInvestiments();
+loadInvestments();
 
 loadFormSubmit();

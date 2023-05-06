@@ -1,12 +1,12 @@
 @host = http://localhost:3000
 
-### Get Investiments
+### Get Investments
 
-GET {{host}}/investiments
+GET {{host}}/investments
 
-### Create Investiment
+### Create Investment
 
-POST {{host}}/investiments
+POST {{host}}/investments
 Content-Type: application/json
 
 {
@@ -14,6 +14,6 @@ Content-Type: application/json
   "value": 100
 }
 
-### Delete Investiment
+### Delete Investment
 
-DELETE {{host}}/investiments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
+DELETE {{host}}/investments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
