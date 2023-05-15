@@ -6,6 +6,10 @@ function formatCurrency(value) {
 }
 
 function getInvestmentView(investment) {
+  const category_class = `investment-${investment.category
+    .toLowerCase()
+    .replaceAll(' ', '-')}`;
+
   return `<div class="col" id="investment-${investment.id}">
     <div class="card">
       <div class="card-header">
@@ -27,9 +31,7 @@ function getInvestmentView(investment) {
         </div>
         <div>
           <span class="fw-bold">Categoria:</span>
-          <span class="badge ${investment.categoryBackground}">${
-    investment.category
-  }</span>
+          <span class="badge ${category_class}">${investment.category}</span>
         </div>
       </div>
     </div>

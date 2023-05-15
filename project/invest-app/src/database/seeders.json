@@ -1,0 +1,36 @@
+{
+  "investments": [
+    {
+      "name": "Tesouro Selic 2029",
+      "value": 1000,
+      "category_id": 1
+    },
+    {
+      "name": "Tesouro Selic 2029",
+      "value": 500,
+      "category_id": 1
+    }
+  ],
+  "categories": [
+    {
+      "id": 1,
+      "name": "Pós"
+    },
+    {
+      "id": 2,
+      "name": "Pré"
+    },
+    {
+      "id": 3,
+      "name": "IPCA"
+    },
+    {
+      "id": 4,
+      "name": "Renda Variável"
+    },
+    {
+      "id": 5,
+      "name": "Alternativos"
+    }
+  ]
+}

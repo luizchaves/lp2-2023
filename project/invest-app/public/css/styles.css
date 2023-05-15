@@ -2,11 +2,11 @@
   cursor: pointer;
 }
 
-.investment-pos {
+.investment-pós {
   background-color: #6366f1;
 }
 
-.investment-pre {
+.investment-pré {
   background-color: #d946ef;
 }
 
@@ -14,6 +14,6 @@
   background-color: #f43f5e;
 }
 
-.investment-rv {
+.investment-renda-variável {
   background-color: #eab308;
 }

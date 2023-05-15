@@ -1,6 +1,6 @@
-import express from 'express';
-import { v4 as uuidv4 } from 'uuid';
-import { investments, categories } from './data/investments.js';
+import { Router } from 'express';
+import Investment from './models/Investment.js';
+import Category from './models/Category.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -9,54 +9,53 @@ class HTTPError extends Error {
   }
 }
 
-const router = express.Router();
+const router = Router();
 
-function loadCategoryValues(investments) {
-  for (const investment of investments) {
-    const categoryId = investment.category_id;
+router.post('/investments', async (req, res) => {
+  const investment = req.body;
 
-    const category = categories.find((category) => category.id === categoryId);
+  const newInvestment = await Investment.create(investment);
 
-    investment.category = category.name;
-    investment.categoryBackground = category.background;
+  if (newInvestment) {
+    res.json(newInvestment);
+  } else {
+    throw new HTTPError('Invalid data to create investment', 400);
   }
-}
+});
 
-router.get('/investments', (req, res) => {
-  loadCategoryValues(investments);
+router.get('/investments', async (req, res) => {
+  const investments = await Investment.readAll();
 
   res.json(investments);
 });
 
-router.post('/investments', (req, res) => {
+router.put('/investments/:id', async (req, res) => {
+  const id = Number(req.params.id);
+
   const investment = req.body;
 
-  const id = uuidv4();
+  if (id && investment) {
+    const newInvestment = await Investment.update(investment, id);
 
-  if (investment) {
-    investments.push({ ...investment, id });
-
-    loadCategoryValues(investments);
-
-    res.json(investments.find((investment) => investment.id === id));
+    res.json(newInvestment);
   } else {
-    throw new HTTPError('Dados inválidos para cadastro de investimento', 400);
+    throw new HTTPError('Invalid data to update investment', 400);
   }
 });
 
-router.delete('/investments/:id', (req, res) => {
+router.delete('/investments/:id', async (req, res) => {
   const id = req.params.id;
 
-  if (id) {
-    const index = investments.findIndex((investment) => investment.id === id);
-
-    investments.splice(index, 1);
+  if (id && (await Investment.remove(id))) {
+    res.sendStatus(204);
+  } else {
+    throw new HTTPError('Id is required to remove investment', 400);
   }
-
-  res.send(204);
 });
 
-router.get('/categories', (req, res) => {
+router.get('/categories', async (req, res) => {
+  const categories = await Category.readAll();
+
   res.json(categories);
 });
 
