@@ -3,6 +3,9 @@ import prisma from '../database/index.js';
 async function create(investment) {
   const newInvestment = await prisma.investment.create({
     data: investment,
+    include: {
+      category: true,
+    },
   });
 
   return newInvestment;
@@ -37,6 +40,9 @@ async function update(investment, id) {
       id,
     },
     data: investment,
+    include: {
+      category: true,
+    },
   });
 
   return updatedInvestment;
