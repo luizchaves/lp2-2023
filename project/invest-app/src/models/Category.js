@@ -1,50 +1,25 @@
-import Database from '../database/database.js';
+import prisma from '../database/index.js';
 
 async function create(category) {
-  const db = await Database.connect();
+  const newCategory = await prisma.category.create({
+    data: category,
+  });
 
-  const { id, name } = category;
-
-  const sql = `
-    INSERT INTO
-      categories (id, name)
-    VALUES
-      (?, ?)
-  `;
-
-  const { lastID } = await db.run(sql, [id, name]);
-
-  return read(lastID);
+  return newCategory;
 }
 
 async function readAll() {
-  const db = await Database.connect();
-
-  const sql = `
-    SELECT
-      *
-    FROM
-      categories
-  `;
-
-  const categories = await db.all(sql);
+  const categories = await prisma.category.findMany();
 
   return categories;
 }
 
 async function read(id) {
-  const db = await Database.connect();
-
-  const sql = `
-    SELECT
-      *
-    FROM
-      categories
-    WHERE
-      id = ?
-  `;
-
-  const category = await db.get(sql, [id]);
+  const category = await prisma.category.findUnique({
+    where: {
+      id,
+    },
+  });
 
   return category;
 }

@@ -10,8 +10,9 @@ POST {{host}}/investments
 Content-Type: application/json
 
 {
-  "name": "Tesouro IPCA 2029",
-  "value": 100
+  "name": "Tesouro IPCA 2035",
+  "value": 100,
+  "categoryId": 3
 }
 
 ### Delete Investment

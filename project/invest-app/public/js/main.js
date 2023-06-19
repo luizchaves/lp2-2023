@@ -6,7 +6,9 @@ function formatCurrency(value) {
 }
 
 function getInvestmentView(investment) {
-  const category_class = `investment-${investment.category
+  const category = investment.category.name;
+
+  const category_class = `investment-${category
     .toLowerCase()
     .replaceAll(' ', '-')}`;
 
@@ -31,7 +33,7 @@ function getInvestmentView(investment) {
         </div>
         <div>
           <span class="fw-bold">Categoria:</span>
-          <span class="badge ${category_class}">${investment.category}</span>
+          <span class="badge ${category_class}">${category}</span>
         </div>
       </div>
     </div>
@@ -76,9 +78,9 @@ function loadFormSubmit() {
 
     const value = Number(document.querySelector('#value').value);
 
-    const category_id = Number(document.querySelector('#category').value);
+    const categoryId = Number(document.querySelector('#category').value);
 
-    const investment = { name, value, category_id };
+    const investment = { name, value, categoryId };
 
     const response = await fetch('/investments', {
       method: 'post',

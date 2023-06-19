@@ -1,94 +1,55 @@
-import Database from '../database/database.js';
+import prisma from '../database/index.js';
 
 async function create(investment) {
-  const db = await Database.connect();
+  const newInvestment = await prisma.investment.create({
+    data: investment,
+  });
 
-  const { name, value, category_id } = investment;
-
-  const sql = `
-    INSERT INTO
-      investments (name, value, category_id)
-    VALUES
-      (?, ?, ?)
-  `;
-
-  const { lastID } = await db.run(sql, [name, value, category_id]);
-
-  return read(lastID);
+  return newInvestment;
 }
 
 async function readAll() {
-  const db = await Database.connect();
-
-  const sql = `
-    SELECT
-      f.id, f.name, f.value, c.name as category
-    FROM
-      investments as f INNER JOIN categories as c
-    ON
-      f.category_id = c.id
-  `;
-
-  const investments = await db.all(sql);
+  const investments = await prisma.investment.findMany({
+    include: {
+      category: true,
+    },
+  });
 
   return investments;
 }
 
 async function read(id) {
-  const db = await Database.connect();
+  const investment = await prisma.investment.findUnique({
+    where: {
+      id,
+    },
+    include: {
+      category: true,
+    },
+  });
 
-  const sql = `
-    SELECT
-      f.id, f.name, f.value, c.name as category
-    FROM
-      investments as f INNER JOIN categories as c
-    ON
-      f.category_id = c.id
-    WHERE
-      f.id = ?
-  `;
-
-  const investments = await db.get(sql, [id]);
-
-  return investments;
+  return investment;
 }
 
 async function update(investment, id) {
-  const db = await Database.connect();
+  const updatedInvestment = await prisma.investment.update({
+    where: {
+      id,
+    },
+    data: investment,
+  });
 
-  const { name, value, category_id } = investment;
-
-  const sql = `
-    UPDATE
-      investments
-    SET
-      name = ?, value = ?, category_id = ?
-    WHERE
-      id = ?
-  `;
-
-  const { changes } = await db.run(sql, [name, value, category_id, id]);
-
-  if (changes === 1) {
-    return read(id);
-  } else {
-    return false;
-  }
+  return updatedInvestment;
 }
 
 async function remove(id) {
-  const db = await Database.connect();
+  const removedInvestment = await prisma.investment.delete({
+    where: {
+      id,
+    },
+  });
 
-  const sql = `
-    DELETE FROM
-      investments
-    WHERE
-      id = ?
-  `;
-
-  const { changes } = await db.run(sql, [id]);
-
-  return changes === 1;
+  return removedInvestment;
 }
 
 export default {
