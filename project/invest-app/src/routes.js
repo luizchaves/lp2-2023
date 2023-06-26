@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import Investment from './models/Investment.js';
 import Category from './models/Category.js';
+import User from './models/User.js';
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -10,6 +11,10 @@ class HTTPError extends Error {
 }
 
 const router = Router();
+
+router.get('/', (req, res) => {
+  res.redirect('/home.html');
+});
 
 router.post('/investments', async (req, res) => {
   const investment = req.body;
@@ -57,6 +62,16 @@ router.get('/categories', async (req, res) => {
   const categories = await Category.readAll();
 
   res.json(categories);
+});
+
+router.post('/users', async (req, res) => {
+  const user = req.body;
+
+  delete user.confirmationPassword;
+
+  const newUser = await User.create(user);
+
+  res.status(201).json(newUser);
 });
 
 // 404 handler
