@@ -1,7 +1,11 @@
 import { Router } from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 import Investment from './models/Investment.js';
 import Category from './models/Category.js';
 import User from './models/User.js';
+
+const saltRounds = Number(process.env.SALT_ROUNDS);
 
 class HTTPError extends Error {
   constructor(message, code) {
@@ -69,9 +73,39 @@ router.post('/users', async (req, res) => {
 
   delete user.confirmationPassword;
 
+  const hash = await bcrypt.hash(user.password, saltRounds);
+
+  user.password = hash;
+
   const newUser = await User.create(user);
 
   res.status(201).json(newUser);
+});
+
+router.post('/signin', async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    const user = await User.readByEmail(email);
+
+    const { id: userId, password: hash } = user;
+
+    const match = await bcrypt.compare(password, hash);
+
+    if (match) {
+      const token = jwt.sign(
+        { userId },
+        process.env.SECRET,
+        { expiresIn: 3600 } // 1h
+      );
+
+      res.json({ auth: true, token });
+    } else {
+      throw new Error('User not found');
+    }
+  } catch (error) {
+    res.status(401).json({ error: 'User not found' });
+  }
 });
 
 // 404 handler
@@ -81,7 +115,7 @@ router.use((req, res, next) => {
 
 // Error handler
 router.use((err, req, res, next) => {
-  // console.error(err.stack);
+  console.error(err.stack);
   if (err instanceof HTTPError) {
     res.status(err.code).json({ message: err.message });
   } else {
