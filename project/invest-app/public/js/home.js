@@ -1,3 +1,5 @@
+import API from './lib/auth.js';
+
 function formatCurrency(value) {
   return value.toLocaleString('pt-br', {
     style: 'currency',
@@ -52,6 +54,9 @@ function addInvestmentView(investment) {
   investmentCard.querySelector('.icon-trash').onclick = () => {
     fetch(`/investments/${investment.id}`, {
       method: 'delete',
+      headers: {
+        Authorization: `Bearer ${API.getToken()}`,
+      },
     });
 
     investmentCard.remove();
@@ -59,7 +64,12 @@ function addInvestmentView(investment) {
 }
 
 async function loadInvestments() {
-  const response = await fetch('/investments');
+  const response = await fetch('/investments', {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${API.getToken()}`,
+    },
+  });
 
   const investments = await response.json();
 
@@ -87,6 +97,7 @@ function loadFormSubmit() {
       body: JSON.stringify(investment),
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${API.getToken()}`,
       },
     });
 
@@ -103,7 +114,12 @@ function loadFormSubmit() {
 async function loadCategoriesSelect() {
   const select = document.querySelector('#category');
 
-  const response = await fetch('/categories');
+  const response = await fetch('/categories', {
+    method: 'get',
+    headers: {
+      Authorization: `Bearer ${API.getToken()}`,
+    },
+  });
 
   const categories = await response.json();
 
@@ -114,8 +130,12 @@ async function loadCategoriesSelect() {
   }
 }
 
-loadCategoriesSelect();
+window.signout = API.signout;
 
-loadInvestments();
+if (API.isAuthenticated()) {
+  loadCategoriesSelect();
 
-loadFormSubmit();
+  loadInvestments();
+
+  loadFormSubmit();
+}

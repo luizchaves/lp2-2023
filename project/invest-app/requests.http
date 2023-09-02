@@ -1,27 +1,5 @@
 @host = http://localhost:3000
-
-### Get Investments
-
-GET {{host}}/investments
-
-### Create Investment
-
-POST {{host}}/investments
-Content-Type: application/json
-
-{
-  "name": "Tesouro IPCA 2035",
-  "value": 100,
-  "categoryId": 3
-}
-
-### Delete Investment
-
-DELETE {{host}}/investments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
-
-### Get Categories
-
-GET {{host}}/categories
+@token = {{login.response.body.$.token}}
 
 ### Signin invalid
 
@@ -43,3 +21,32 @@ Content-Type: application/json
   "email": "luiz@email.com",
   "password": "12345678"
 }
+
+
+### Get Investments (whithout token)
+
+GET {{host}}/investments
+
+### Get Investments (whith token)
+
+GET {{host}}/investments
+Authorization: bearer {{token}}
+
+### Create Investment
+
+POST {{host}}/investments
+Content-Type: application/json
+
+{
+  "name": "Tesouro IPCA 2035",
+  "value": 100,
+  "categoryId": 3
+}
+
+### Delete Investment
+
+DELETE {{host}}/investments/9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
+
+### Get Categories
+
+GET {{host}}/categories

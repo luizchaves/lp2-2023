@@ -5,6 +5,8 @@ import Investment from './models/Investment.js';
 import Category from './models/Category.js';
 import User from './models/User.js';
 
+import { isAuthenticated } from './middleware/auth.js';
+
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
 class HTTPError extends Error {
@@ -20,7 +22,7 @@ router.get('/', (req, res) => {
   res.redirect('/home.html');
 });
 
-router.post('/investments', async (req, res) => {
+router.post('/investments', isAuthenticated, async (req, res) => {
   const investment = req.body;
 
   const newInvestment = await Investment.create(investment);
@@ -32,13 +34,13 @@ router.post('/investments', async (req, res) => {
   }
 });
 
-router.get('/investments', async (req, res) => {
+router.get('/investments', isAuthenticated, async (req, res) => {
   const investments = await Investment.readAll();
 
   res.json(investments);
 });
 
-router.put('/investments/:id', async (req, res) => {
+router.put('/investments/:id', isAuthenticated, async (req, res) => {
   const id = Number(req.params.id);
 
   const investment = req.body;
@@ -52,7 +54,7 @@ router.put('/investments/:id', async (req, res) => {
   }
 });
 
-router.delete('/investments/:id', async (req, res) => {
+router.delete('/investments/:id', isAuthenticated, async (req, res) => {
   const id = req.params.id;
 
   if (id && (await Investment.remove(id))) {
@@ -62,7 +64,7 @@ router.delete('/investments/:id', async (req, res) => {
   }
 });
 
-router.get('/categories', async (req, res) => {
+router.get('/categories', isAuthenticated, async (req, res) => {
   const categories = await Category.readAll();
 
   res.json(categories);
@@ -95,7 +97,7 @@ router.post('/signin', async (req, res) => {
     if (match) {
       const token = jwt.sign(
         { userId },
-        process.env.SECRET,
+        process.env.JWT_SECRET,
         { expiresIn: 3600 } // 1h
       );
 
