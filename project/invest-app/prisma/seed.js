@@ -37,22 +37,6 @@ async function main() {
       name: 'Alternativos',
     },
   });
-
-  const selic2029 = await prisma.investment.create({
-    data: {
-      name: 'Tesouro Selic 2029',
-      value: 100,
-      categoryId: 1,
-    },
-  });
-
-  const ipca2029 = await prisma.investment.create({
-    data: {
-      name: 'Tesouro IPCA 2029',
-      value: 100,
-      categoryId: 3,
-    },
-  });
 }
 main()
   .then(async () => {

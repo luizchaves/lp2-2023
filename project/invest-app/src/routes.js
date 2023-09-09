@@ -25,7 +25,12 @@ router.get('/', (req, res) => {
 router.post('/investments', isAuthenticated, async (req, res) => {
   const investment = req.body;
 
-  const newInvestment = await Investment.create(investment);
+  const userId = req.userId;
+
+  const newInvestment = await Investment.create({
+    ...investment,
+    userId,
+  });
 
   if (newInvestment) {
     res.json(newInvestment);
@@ -35,7 +40,9 @@ router.post('/investments', isAuthenticated, async (req, res) => {
 });
 
 router.get('/investments', isAuthenticated, async (req, res) => {
-  const investments = await Investment.readAll();
+  const userId = req.userId;
+
+  const investments = await Investment.readAll({ userId });
 
   res.json(investments);
 });
@@ -45,8 +52,14 @@ router.put('/investments/:id', isAuthenticated, async (req, res) => {
 
   const investment = req.body;
 
+  const userId = req.userId;
+
   if (id && investment) {
-    const newInvestment = await Investment.update(investment, id);
+    const newInvestment = await Investment.update({
+      ...investment,
+      userId,
+      id,
+    });
 
     res.json(newInvestment);
   } else {
@@ -55,7 +68,7 @@ router.put('/investments/:id', isAuthenticated, async (req, res) => {
 });
 
 router.delete('/investments/:id', isAuthenticated, async (req, res) => {
-  const id = req.params.id;
+  const id = Number(req.params.id);
 
   if (id && (await Investment.remove(id))) {
     res.sendStatus(204);

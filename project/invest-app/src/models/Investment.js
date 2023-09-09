@@ -5,16 +5,37 @@ async function create(investment) {
     data: investment,
     include: {
       category: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
   return newInvestment;
 }
 
-async function readAll() {
+async function readAll(where) {
+  if (where?.name) {
+    where.name = {
+      contains: where.name,
+    };
+  }
+
   const investments = await prisma.investment.findMany({
+    where,
     include: {
       category: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
@@ -28,6 +49,13 @@ async function read(id) {
     },
     include: {
       category: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
@@ -42,6 +70,13 @@ async function update(investment, id) {
     data: investment,
     include: {
       category: true,
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
     },
   });
 
