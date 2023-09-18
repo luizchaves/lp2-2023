@@ -36,6 +36,7 @@ Authorization: bearer {{token}}
 
 POST {{host}}/investments
 Content-Type: application/json
+Authorization: bearer {{token}}
 
 {
   "name": "Tesouro IPCA 2035",

@@ -16,7 +16,8 @@
     "express-async-errors": "^3.1.1",
     "jsonwebtoken": "^9.0.1",
     "morgan": "^1.10.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "zod": "^3.22.2"
   },
   "devDependencies": {
     "prisma": "^4.15.0"
