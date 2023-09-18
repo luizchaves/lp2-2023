@@ -70,6 +70,11 @@ router.put(
       params: z.object({
         id: z.number(),
       }),
+      body: z.object({
+        name: z.string(),
+        value: z.number(),
+        categoryId: z.number(),
+      }),
     })
   ),
   async (req, res) => {
