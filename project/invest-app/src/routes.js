@@ -8,6 +8,7 @@ import User from './models/User.js';
 
 import { validate } from './middleware/validate.js';
 import { isAuthenticated } from './middleware/auth.js';
+import SendMail from './services/SendMail.js';
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
 
@@ -129,7 +130,7 @@ router.post(
   '/users',
   validate(
     z.object({
-      params: z.object({
+      body: z.object({
         name: z.string(),
         email: z.string().email(),
         password: z.string().min(8),
@@ -147,6 +148,8 @@ router.post(
     user.password = hash;
 
     const newUser = await User.create(user);
+
+    await SendMail.createNewUser(newUser.email);
 
     res.status(201).json(newUser);
   }
