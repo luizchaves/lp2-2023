@@ -161,6 +161,20 @@ router.post(
   }
 );
 
+router.get('/users/me', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.userId;
+
+    const user = await User.readById(userId);
+
+    delete user.password;
+
+    return res.json(user);
+  } catch (error) {
+    throw new HTTPError('Unable to find user', 400);
+  }
+});
+
 router.post(
   '/users/image',
   isAuthenticated,

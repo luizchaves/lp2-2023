@@ -16,6 +16,12 @@ Content-Type: application/json
   "confirmationPassword": "12345678"
 }
 
+### Read User (with token)
+
+# @name userMe
+GET {{host}}/users/me
+Authorization: bearer {{token}}
+
 ### Signin Ok
 
 # @name signin
