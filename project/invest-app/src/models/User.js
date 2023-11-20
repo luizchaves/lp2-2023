@@ -1,7 +1,15 @@
 import prisma from '../database/index.js';
 
 async function readAll() {
-  const users = await prisma.host.findMany();
+  const users = await prisma.host.findMany({
+    include: {
+      image: {
+        select: {
+          path: true,
+        },
+      },
+    },
+  });
 
   return users;
 }
@@ -10,6 +18,13 @@ async function read(id) {
   const user = await prisma.user.findFirst({
     where: {
       id,
+    },
+    include: {
+      image: {
+        select: {
+          path: true,
+        },
+      },
     },
   });
 

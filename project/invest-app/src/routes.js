@@ -2,12 +2,18 @@ import { Router } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { z } from 'zod';
+import multer from 'multer';
+
 import Investment from './models/Investment.js';
 import Category from './models/Category.js';
 import User from './models/User.js';
+import Image from './models/Image.js';
+
+import uploadConfig from './config/multer.js';
 
 import { validate } from './middleware/validate.js';
 import { isAuthenticated } from './middleware/auth.js';
+
 import SendMail from './services/SendMail.js';
 
 const saltRounds = Number(process.env.SALT_ROUNDS);
@@ -156,10 +162,56 @@ router.post(
 );
 
 router.post(
+  '/users/image',
+  isAuthenticated,
+  multer(uploadConfig).single('image'),
+  async (req, res) => {
+    try {
+      const userId = req.userId;
+
+      if (req.file) {
+        const path = `/imgs/profile/${req.file.filename}`;
+
+        await Image.create({ userId, path });
+
+        res.sendStatus(201);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new HTTPError('Unable to create image', 400);
+    }
+  }
+);
+
+router.put(
+  '/users/image',
+  isAuthenticated,
+  multer(uploadConfig).single('image'),
+  async (req, res) => {
+    try {
+      const userId = req.userId;
+
+      if (req.file) {
+        const path = `/imgs/profile/${req.file.filename}`;
+
+        const image = await Image.update({ userId, path });
+
+        res.json(image);
+      } else {
+        throw new Error();
+      }
+    } catch (error) {
+      throw new HTTPError('Unable to create image', 400);
+    }
+  }
+);
+
+router.post(
   '/signin',
   validate(
     z.object({
-      params: z.object({
+      body: z.object({
         email: z.string().email(),
         password: z.string().min(8),
       }),
