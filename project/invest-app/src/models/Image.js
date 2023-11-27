@@ -1,18 +1,18 @@
 import prisma from '../database/index.js';
 
 async function create({ userId, path }) {
-  const newImage = await prisma.image.create({
-    data: {
-      path,
-      user: {
-        connect: {
-          id: userId,
-        },
+  try {
+    const newImage = await prisma.image.create({
+      data: {
+        path,
+        userId,
       },
-    },
-  });
+    });
 
-  return newImage;
+    return newImage;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
 async function update({ userId, path }) {

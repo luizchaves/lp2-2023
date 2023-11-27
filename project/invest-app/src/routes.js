@@ -186,9 +186,9 @@ router.post(
       if (req.file) {
         const path = `/imgs/profile/${req.file.filename}`;
 
-        await Image.create({ userId, path });
+        const newImage = await Image.create({ userId, path });
 
-        res.sendStatus(201);
+        res.status(201).json(newImage);
       } else {
         throw new Error();
       }
