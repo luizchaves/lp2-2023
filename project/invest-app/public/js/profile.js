@@ -31,8 +31,6 @@ async function loadProfile() {
   document.querySelector('#profile-email').innerText = user.email;
 
   document.querySelector('#profile-image').src = image;
-
-  document.querySelector('#userId').value = user.id;
 }
 
 form.onsubmit = async (event) => {
